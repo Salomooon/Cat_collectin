@@ -1,0 +1,515 @@
+{
+	"info": {
+		"_postman_id": "2b66f2f3-b830-444b-a80f-335379d3612e",
+		"name": "Autotests SATReg+",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "05fcbad5-fb2e-4664-8e41-0aaa04f315cf",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody); //объявляем переменную, которая равна всему ответу запроса\r",
+							"postman.setEnvironmentVariable(\"authToken\", jsonData.data.authToken); // после jsonData пишем путь к переменной, которую добавляем в энв\r",
+							"postman.setEnvironmentVariable(\"code\", jsonData.data.code);\r",
+							"\r",
+							"\r",
+							"pm.test(\"SuccessTrue\", function () {\r",
+							"var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"codeSent\", function () {\r",
+							"var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.codeSent).to.eql(true);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}auth/check/json?phone={{phoneTest}}&mode=autotest&app=cabinet",
+					"host": [
+						"{{url}}auth"
+					],
+					"path": [
+						"check",
+						"json"
+					],
+					"query": [
+						{
+							"key": "phone",
+							"value": "{{phoneTest}}"
+						},
+						{
+							"key": "mode",
+							"value": "autotest"
+						},
+						{
+							"key": "app",
+							"value": "cabinet"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check OTP",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6eddeb45-7126-4e59-8f34-8848ce92399c",
+						"exec": [
+							"pm.test(\"SuccessTrue\", function () {\r",
+							"var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}auth/checkCode/json?authToken={{authToken}}&code={{code}}",
+					"host": [
+						"{{url}}auth"
+					],
+					"path": [
+						"checkCode",
+						"json"
+					],
+					"query": [
+						{
+							"key": "authToken",
+							"value": "{{authToken}}"
+						},
+						{
+							"key": "code",
+							"value": "{{code}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "16515ef1-e25e-4df4-a7e8-4c2f77cef63b",
+						"exec": [
+							"pm.test(\"phoneNumberConsists\", function () {\r",
+							"var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.phoneNumber).to.eql(\"+380675489673\");\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}auth/register/json?authToken={{authToken}}&password={{password}}&code={{code}}&app=cabinet",
+					"host": [
+						"{{url}}auth"
+					],
+					"path": [
+						"register",
+						"json"
+					],
+					"query": [
+						{
+							"key": "authToken",
+							"value": "{{authToken}}"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}"
+						},
+						{
+							"key": "code",
+							"value": "{{code}}"
+						},
+						{
+							"key": "app",
+							"value": "cabinet"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Towns",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "59b8fb6b-7818-46ac-8bdf-6a93276f7c8a",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"cityRef\", jsonData.data[1].ref);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"SuccessTrue\", function () {\r",
+							"var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(\"true\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}main/json/getTowns?searchstring=Київ",
+					"host": [
+						"{{url}}main"
+					],
+					"path": [
+						"json",
+						"getTowns"
+					],
+					"query": [
+						{
+							"key": "searchstring",
+							"value": "Київ"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Confirm",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c2647f71-4db5-41a0-bbbe-dd155499a8ef",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody); //объявляем переменную, которая равна всему ответу запроса\r",
+							"postman.setEnvironmentVariable(\"apiKey\", jsonData.data.apiKey);\r",
+							"\r",
+							"pm.test(\"SuccessTrue\", function () {\r",
+							"var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"PropertyApikey\", function () {\r",
+							"   var jsonDataT = pm.response.json();\r",
+							"   pm.expect(jsonDataT.data).to.have.property(\"apiKey\"); \r",
+							"});\r",
+							"pm.test(\"nameTest\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.name).to.eql(\"Тест\");\r",
+							"});\r",
+							"/*\r",
+							"var schema = {\r",
+							"    \"type\": \"object\",\r",
+							"    \"required\": [\"name\", \"surname\"], //поля, которые обязательно должны вернуться в объекте\r",
+							"    \"property\":{\r",
+							"        \"name\":{\"type\":\"string\"},\r",
+							"        \"surname\":{\"type\":\"string\"}\r",
+							"        /*\"films\": {\r",
+							"            \"type\":\"array\",//массив\r",
+							"            \"items\": {\"type\":\"string\"} //свойства этих полей. Для этого используем спецслово items \r",
+							"    },\r",
+							"  }\r",
+							"};\r",
+							"\r",
+							"pm.test(\"Body is correct\", function(){\r",
+							"    pm.expect(jsonData.data.schema).to.be.true;\r",
+							"});*/"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"authToken\": \"{{authToken}}\",\n    \"app\":\"cabinet\",\n    \"profile\": {\n        \"phoneNumber\": \"+380675489673\",\n        \"name\": \"Тест\",\n        \"surname\": \"Регистрации\",\n        \"patronymic\": \"100\",\n        \"dateOfBirth\": \"2000-12-12T00:00:00\",\n        \"gender\": \"female\",\n        \"phones\": [\n            \"+380672222220\"\n        ],\n        \"city\":\"{{cityRef}}\",\n    }\n}\n"
+				},
+				"url": {
+					"raw": "{{url}}auth/confirmRegister/json",
+					"host": [
+						"{{url}}auth"
+					],
+					"path": [
+						"confirmRegister",
+						"json"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение списка статусов (для регистрации)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "62ec9ce3-e184-4c5e-ac65-df823642930f",
+						"exec": [
+							"pm.test(\"SuccessTrue\", function () {\r",
+							"var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}documents/nng/json/liststatuses?language=ru&apiKey={{apiKey}}&app=cabinet",
+					"host": [
+						"{{url}}documents"
+					],
+					"path": [
+						"nng",
+						"json",
+						"liststatuses"
+					],
+					"query": [
+						{
+							"key": "language",
+							"value": "ru"
+						},
+						{
+							"key": "apiKey",
+							"value": "{{apiKey}}"
+						},
+						{
+							"key": "accountRef",
+							"value": "{{accountref}}",
+							"disabled": true
+						},
+						{
+							"key": "app",
+							"value": "cabinet"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение списка и количества ННГ (для регистрации)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fe6119d1-80f6-4bdd-9fd9-166582285afd",
+						"exec": [
+							"pm.test(\"SuccessTrue\", function () {\r",
+							"var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.success).to.eql(true);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"ref\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}documents/nng/json/listnew?language=ru&apiKey={{apiKey}}&app=cabinet",
+					"host": [
+						"{{url}}documents"
+					],
+					"path": [
+						"nng",
+						"json",
+						"listnew"
+					],
+					"query": [
+						{
+							"key": "language",
+							"value": "ru"
+						},
+						{
+							"key": "apiKey",
+							"value": "{{apiKey}}"
+						},
+						{
+							"key": "accountRef",
+							"value": "b41195bb-e8f7-11e9-ae63-005056b13e62",
+							"disabled": true
+						},
+						{
+							"key": "app",
+							"value": "cabinet"
+						},
+						{
+							"key": "onlyCount",
+							"value": "true",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AuthСheck2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "05fcbad5-fb2e-4664-8e41-0aaa04f315cf",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody); //объявляем переменную, которая равна всему ответу запроса\r",
+							"postman.setEnvironmentVariable(\"authToken\", jsonData.data.authToken); // после jsonData пишем путь к переменной, которую добавляем в энв\r",
+							"\r",
+							"pm.test(\"PropertyApikey\", function () {\r",
+							"   var jsonDataT = pm.response.json();\r",
+							"   pm.expect(jsonDataT.data).to.have.property(\"authToken\"); \r",
+							"});\r",
+							"\r",
+							"pm.test(\"codeSent\", function () {\r",
+							"var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.codeSent).to.eql(false);\r",
+							"});\r",
+							"    \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}auth/check/json?phone={{phoneTest}}&mode=autotest&app=cabinet",
+					"host": [
+						"{{url}}auth"
+					],
+					"path": [
+						"check",
+						"json"
+					],
+					"query": [
+						{
+							"key": "phone",
+							"value": "{{phoneTest}}"
+						},
+						{
+							"key": "mode",
+							"value": "autotest"
+						},
+						{
+							"key": "app",
+							"value": "cabinet"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6e7219aa-93c2-4112-acad-b36e7726bbcb",
+						"exec": [
+							"pm.environment.unset(\"cityRef\"); //удалить переменную из окружения после завершения теста",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"SuccessTrue\", function () {",
+							"var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}auth/unregister/json?authToken={{authToken}}",
+					"host": [
+						"{{url}}auth"
+					],
+					"path": [
+						"unregister",
+						"json"
+					],
+					"query": [
+						{
+							"key": "authToken",
+							"value": "{{authToken}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
